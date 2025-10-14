@@ -9,7 +9,9 @@ import {
 } from '@nestjs/common';
 import { OwnersService } from './owners.service';
 import { Prisma } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Owners')
 @Controller('owners')
 export class OwnersController {
   constructor(private readonly ownersService: OwnersService) {}

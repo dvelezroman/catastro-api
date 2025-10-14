@@ -74,11 +74,35 @@ DB_NAME=catastro_local
 
 ### Restaurants
 
-- `GET /restaurants` - Get all restaurants
-- `GET /restaurants/:id` - Get restaurant by ID
+- `GET /restaurants` - Get all restaurants (with owner and recipes)
+- `GET /restaurants/:id` - Get restaurant by ID (with owner and recipes)
 - `POST /restaurants` - Create new restaurant
+- `POST /restaurants/with-owner` - Create restaurant and owner together
+- `POST /restaurants/complete` - Create restaurant, owner, and recipes in one request
 - `PATCH /restaurants/:id` - Update restaurant
 - `DELETE /restaurants/:id` - Delete restaurant
+- `POST /restaurants/:id/recipes/:recipeId` - Add recipe to restaurant
+- `DELETE /restaurants/:id/recipes/:recipeId` - Remove recipe from restaurant
+
+### Owners
+
+- `GET /owners` - Get all owners (with their restaurants)
+- `GET /owners/:id` - Get owner by ID (with their restaurants)
+- `GET /owners/:id/restaurants` - Get all restaurants owned by specific owner
+- `POST /owners` - Create new owner
+- `PATCH /owners/:id` - Update owner
+- `DELETE /owners/:id` - Delete owner
+
+### Recipes
+
+- `GET /recipes` - Get all recipes (with associated restaurants)
+- `GET /recipes/:id` - Get recipe by ID (with associated restaurants)
+- `GET /recipes/restaurant/:restaurantId` - Get all recipes for a specific restaurant
+- `POST /recipes` - Create new recipe
+- `POST /recipes/:recipeId/restaurant/:restaurantId` - Add recipe to restaurant
+- `DELETE /recipes/:recipeId/restaurant/:restaurantId` - Remove recipe from restaurant
+- `PATCH /recipes/:id` - Update recipe
+- `DELETE /recipes/:id` - Delete recipe
 
 ### Operators
 
@@ -93,16 +117,42 @@ DB_NAME=catastro_local
 ### Restaurant Model
 - `id`: String (Primary Key)
 - `name`: String
-- `description`: String (Optional)
+- `description`: String (Optional) - Short description
+- `history`: String (Optional) - Detailed history/description for web presentation
 - `address`: String
 - `latitude`: Float
 - `longitude`: Float
 - `phone`: String (Optional)
 - `email`: String (Optional)
 - `website`: String (Optional)
-- `imageUrl`: String (Optional)
+- `principalImage`: String (Optional) - Main restaurant image
+- `images`: String[] - Array of additional image URLs
+- `identificationNumber`: String (Optional) - Business identification number
+- `ownerId`: String (Optional) - Foreign key to Owner
 - `createdAt`: DateTime
 - `updatedAt`: DateTime
+
+### Owner Model
+- `id`: String (Primary Key)
+- `name`: String
+- `email`: String (Unique)
+- `phone`: String (Optional)
+- `address`: String (Optional)
+- `createdAt`: DateTime
+- `updatedAt`: DateTime
+
+### Recipe Model
+- `id`: String (Primary Key)
+- `name`: String
+- `description`: String (Optional)
+- `createdAt`: DateTime
+- `updatedAt`: DateTime
+
+### RestaurantRecipe Model (Junction Table)
+- `id`: String (Primary Key)
+- `restaurantId`: String (Foreign key to Restaurant)
+- `recipeId`: String (Foreign key to Recipe)
+- `createdAt`: DateTime
 
 ### Operator Model
 - `id`: String (Primary Key)
@@ -111,6 +161,136 @@ DB_NAME=catastro_local
 - `phone`: String (Optional)
 - `createdAt`: DateTime
 - `updatedAt`: DateTime
+
+## Relationships
+
+- **Owner ↔ Restaurant**: One-to-Many (One owner can have multiple restaurants)
+- **Restaurant ↔ Recipe**: Many-to-Many (Restaurants can have multiple recipes, recipes can belong to multiple restaurants)
+- **RestaurantRecipe**: Junction table for Restaurant-Recipe relationship
+
+## API Usage Examples
+
+### Create Restaurant with Owner and Recipes
+
+**Endpoint:** `POST /restaurants/complete`
+
+**Request Body:**
+```json
+{
+  "restaurant": {
+    "name": "El Buen Sabor",
+    "description": "Restaurante familiar con comida tradicional",
+    "history": "Fundado en 1985 por la familia González, El Buen Sabor ha sido durante más de tres décadas el lugar de encuentro preferido de los portovejenses. Nuestra tradición culinaria se remonta a las recetas ancestrales de la abuela María, quien transmitió sus secretos gastronómicos de generación en generación. Especializados en comida ecuatoriana auténtica, cada plato cuenta una historia de sabor y tradición que nos conecta con nuestras raíces. Nuestro compromiso es mantener viva la cocina tradicional mientras innovamos con ingredientes frescos y técnicas modernas.",
+    "address": "Av. Principal 123, Portoviejo",
+    "latitude": -1.0547,
+    "longitude": -80.4545,
+    "phone": "(05) 2638-1234",
+    "email": "contacto@elbuensabor.ec",
+    "website": "https://elbuensabor.ec",
+    "principalImage": "https://example.com/restaurant-main.jpg",
+    "images": [
+      "https://example.com/restaurant-1.jpg",
+      "https://example.com/restaurant-2.jpg",
+      "https://example.com/restaurant-3.jpg"
+    ],
+    "identificationNumber": "1234567890"
+  },
+  "owner": {
+    "name": "María González",
+    "email": "maria.gonzalez@email.com",
+    "phone": "(05) 2638-5678",
+    "address": "Calle Secundaria 456, Portoviejo"
+  },
+  "recipeIds": [
+    "recipe-id-1",
+    "recipe-id-2",
+    "recipe-id-3"
+  ]
+}
+```
+
+**Response:**
+```json
+{
+  "id": "restaurant-id",
+  "name": "El Buen Sabor",
+  "description": "Restaurante familiar con comida tradicional",
+  "address": "Av. Principal 123, Portoviejo",
+  "latitude": -1.0547,
+  "longitude": -80.4545,
+  "phone": "(05) 2638-1234",
+  "email": "contacto@elbuensabor.ec",
+  "website": "https://elbuensabor.ec",
+  "principalImage": "https://example.com/restaurant-main.jpg",
+  "images": [
+    "https://example.com/restaurant-1.jpg",
+    "https://example.com/restaurant-2.jpg",
+    "https://example.com/restaurant-3.jpg"
+  ],
+  "identificationNumber": "1234567890",
+  "ownerId": "owner-id",
+  "createdAt": "2024-01-15T10:30:00.000Z",
+  "updatedAt": "2024-01-15T10:30:00.000Z",
+  "owner": {
+    "id": "owner-id",
+    "name": "María González",
+    "email": "maria.gonzalez@email.com",
+    "phone": "(05) 2638-5678",
+    "address": "Calle Secundaria 456, Portoviejo",
+    "createdAt": "2024-01-15T10:30:00.000Z",
+    "updatedAt": "2024-01-15T10:30:00.000Z"
+  },
+  "restaurantRecipes": [
+    {
+      "id": "restaurant-recipe-1",
+      "restaurantId": "restaurant-id",
+      "recipeId": "recipe-1",
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "recipe": {
+        "id": "recipe-1",
+        "name": "Ceviche de Camarón",
+        "description": "Ceviche fresco con camarones del día",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T10:30:00.000Z"
+      }
+    },
+    {
+      "id": "restaurant-recipe-2",
+      "restaurantId": "restaurant-id",
+      "recipeId": "recipe-2",
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "recipe": {
+        "id": "recipe-2",
+        "name": "Arroz con Pollo",
+        "description": "Arroz tradicional con pollo y verduras",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T10:30:00.000Z"
+      }
+    }
+  ]
+}
+```
+
+### Recipe Management
+
+**Create Recipe:**
+```json
+POST /recipes
+{
+  "name": "Encebollado",
+  "description": "Sopa tradicional ecuatoriana con pescado"
+}
+```
+
+**Add Recipe to Restaurant:**
+```
+POST /restaurants/{restaurantId}/recipes/{recipeId}
+```
+
+**Get Recipes by Restaurant:**
+```
+GET /recipes/restaurant/{restaurantId}
+```
 
 ## Development
 

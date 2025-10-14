@@ -14,20 +14,70 @@ datasource db {
 }
 
 model Restaurant {
+  id                String   @id @default(cuid())
+  name              String
+  description       String?
+  history           String?  // Detailed history/description for web presentation
+  address           String
+  latitude          Float
+  longitude         Float
+  phone             String?
+  email             String?
+  website           String?
+  principalImage    String?
+  images            String[] // Array of image URLs
+  identificationNumber String?
+  ownerId           String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  owner             Owner?   @relation(fields: [ownerId], references: [id])
+  restaurantRecipes RestaurantRecipe[]
+
+  @@map("restaurants")
+}
+
+model Owner {
   id          String   @id @default(cuid())
   name        String
-  description String?
-  address     String
-  latitude    Float
-  longitude   Float
+  email       String   @unique
   phone       String?
-  email       String?
-  website     String?
-  imageUrl    String?
+  address     String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@map("restaurants")
+  // Relations
+  restaurants Restaurant[]
+
+  @@map("owners")
+}
+
+model Recipe {
+  id           String   @id @default(cuid())
+  name         String
+  description  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  restaurantRecipes RestaurantRecipe[]
+
+  @@map("recipes")
+}
+
+model RestaurantRecipe {
+  id           String @id @default(cuid())
+  restaurantId String
+  recipeId     String
+  createdAt    DateTime @default(now())
+
+  // Relations
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([restaurantId, recipeId])
+  @@map("restaurant_recipes")
 }
 
 model Operator {

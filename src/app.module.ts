@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { PrismaService } from './prisma/prisma.service';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { OperatorsModule } from './operators/operators.module';
+import { OwnersModule } from './owners/owners.module';
+import { RecipesModule } from './recipes/recipes.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { OperatorsModule } from './operators/operators.module';
     }),
     RestaurantsModule,
     OperatorsModule,
+    OwnersModule,
+    RecipesModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

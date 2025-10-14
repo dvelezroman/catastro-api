@@ -9,7 +9,9 @@ import {
 } from '@nestjs/common';
 import { OperatorsService } from './operators.service';
 import { Prisma } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Operators')
 @Controller('operators')
 export class OperatorsController {
   constructor(private readonly operatorsService: OperatorsService) {}

@@ -22,7 +22,7 @@ import {
   CreateRestaurantWithOwnerDto,
 } from '../dto/restaurant.dto';
 
-@ApiTags('restaurants')
+@ApiTags('Restaurants')
 @Controller('restaurants')
 export class RestaurantsController {
   constructor(private readonly restaurantsService: RestaurantsService) {}

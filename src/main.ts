@@ -15,11 +15,6 @@ async function bootstrap() {
       'API for managing restaurants, owners, recipes, and operators in the Catastro Local system',
     )
     .setVersion('1.0')
-    .addTag('restaurants', 'Restaurant management endpoints')
-    .addTag('owners', 'Owner management endpoints')
-    .addTag('recipes', 'Recipe management endpoints')
-    .addTag('operators', 'Operator management endpoints')
-    .addTag('health', 'Health check endpoints')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

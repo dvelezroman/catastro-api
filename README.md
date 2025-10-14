@@ -402,20 +402,92 @@ GET /health/live
 
 ### Available Scripts
 
+#### Application Scripts
 - `npm run start` - Start the application
 - `npm run start:dev` - Start in development mode with hot reload
 - `npm run start:debug` - Start in debug mode
+- `npm run start:prod` - Start in production mode
 - `npm run build` - Build the application
-- `npm run test` - Run tests
-- `npm run test:e2e` - Run end-to-end tests
+
+#### Testing Scripts
+- `npm run test` - Run unit tests
+- `npm run test:watch` - Run tests in watch mode
 - `npm run test:cov` - Run tests with coverage
+- `npm run test:e2e` - Run end-to-end tests
 
-### Database Commands
+#### Code Quality Scripts
+- `npm run lint` - Run ESLint
+- `npm run format` - Format code with Prettier
 
-- `npx prisma studio` - Open Prisma Studio (database GUI)
-- `npx prisma migrate dev` - Create and apply migrations
-- `npx prisma migrate reset` - Reset database and apply all migrations
-- `npx prisma generate` - Generate Prisma client
+#### Database Scripts
+- `npm run db:generate` - Generate Prisma client
+- `npm run db:push` - Push schema changes to database (development)
+- `npm run db:migrate` - Create and apply migrations (development)
+- `npm run db:migrate:deploy` - Apply migrations (production)
+- `npm run db:migrate:reset` - Reset database and apply all migrations
+- `npm run db:reset` - Force reset database
+- `npm run db:seed` - Seed database with sample data
+- `npm run db:studio` - Open Prisma Studio
+- `npm run db:status` - Check migration status
+
+#### Database Workflow Scripts
+- `npm run db:setup` - Setup database (generate + push)
+- `npm run db:dev` - Development workflow (generate + migrate)
+- `npm run db:deploy` - Production deployment (generate + deploy)
+
+#### Docker Scripts
+- `npm run docker:up` - Start Docker containers
+- `npm run docker:down` - Stop Docker containers
+- `npm run docker:restart` - Restart Docker containers
+- `npm run docker:logs` - View Docker logs
+- `npm run docker:clean` - Clean Docker containers and volumes
+
+### Database Workflows
+
+#### Development Setup
+```bash
+# Start Docker database
+npm run docker:up
+
+# Setup database (generate + push schema)
+npm run db:setup
+
+# Seed with sample data
+npm run db:seed
+
+# Start development server
+npm run start:dev
+```
+
+#### Production Deployment
+```bash
+# Deploy database migrations
+npm run db:deploy
+
+# Start production server
+npm run start:prod
+```
+
+#### Database Reset (Development)
+```bash
+# Reset database and apply migrations
+npm run db:reset
+
+# Seed with fresh data
+npm run db:seed
+```
+
+#### Database Management
+```bash
+# Check migration status
+npm run db:status
+
+# Open Prisma Studio (database GUI)
+npm run db:studio
+
+# View database logs
+npm run docker:logs
+```
 
 ## Project Structure
 

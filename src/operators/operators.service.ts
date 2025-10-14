@@ -3,11 +3,14 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Operator, Prisma } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 
+// Type for operator without password
+type OperatorWithoutPassword = Omit<Operator, 'password'>;
+
 @Injectable()
 export class OperatorsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: Prisma.OperatorCreateInput): Promise<Operator> {
+  async create(data: Prisma.OperatorCreateInput): Promise<OperatorWithoutPassword> {
     // Hash password if provided
     if (data.password && typeof data.password === 'string') {
       data.password = await bcrypt.hash(data.password, 10);
@@ -27,7 +30,7 @@ export class OperatorsService {
     });
   }
 
-  async findAll(): Promise<Operator[]> {
+  async findAll(): Promise<OperatorWithoutPassword[]> {
     return this.prisma.operator.findMany({
       select: {
         id: true,
@@ -41,7 +44,7 @@ export class OperatorsService {
     });
   }
 
-  async findOne(id: string): Promise<Operator | null> {
+  async findOne(id: string): Promise<OperatorWithoutPassword | null> {
     return this.prisma.operator.findUnique({
       where: { id },
       select: {
@@ -59,7 +62,7 @@ export class OperatorsService {
   async update(
     id: string,
     data: Prisma.OperatorUpdateInput,
-  ): Promise<Operator> {
+  ): Promise<OperatorWithoutPassword> {
     // Hash password if provided
     if (data.password && typeof data.password === 'string') {
       data.password = await bcrypt.hash(data.password, 10);
@@ -80,7 +83,7 @@ export class OperatorsService {
     });
   }
 
-  async remove(id: string): Promise<Operator> {
+  async remove(id: string): Promise<OperatorWithoutPassword> {
     return this.prisma.operator.delete({
       where: { id },
       select: {

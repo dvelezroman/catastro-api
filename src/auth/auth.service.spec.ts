@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcryptjs';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -52,7 +53,7 @@ describe('AuthService', () => {
     it('should return operator without password when credentials are valid', async () => {
       const email = 'test@example.com';
       const password = 'password123';
-      const hashedPassword = '$2a$10$hashedpassword';
+      const hashedPassword = await bcrypt.hash(password, 10);
       
       const operator = {
         id: '1',
@@ -91,6 +92,9 @@ describe('AuthService', () => {
         password: 'password123',
       };
 
+      const password = 'password123';
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       const operator = {
         id: '1',
         name: 'Test Operator',
@@ -103,7 +107,7 @@ describe('AuthService', () => {
 
       mockPrismaService.operator.findUnique.mockResolvedValue({
         ...operator,
-        password: '$2a$10$hashedpassword',
+        password: hashedPassword,
       });
       mockJwtService.sign.mockReturnValue('jwt-token');
 

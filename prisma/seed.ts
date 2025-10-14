@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -6,6 +7,8 @@ async function main() {
   console.log('🌱 Starting database seeding...');
 
   // Create sample operators
+  const hashedPassword = await bcrypt.hash('password123', 10);
+  
   const operator1 = await prisma.operator.upsert({
     where: { email: 'carlos.mendoza@portoviejo.ec' },
     update: {},
@@ -13,6 +16,8 @@ async function main() {
       name: 'Carlos Mendoza',
       email: 'carlos.mendoza@portoviejo.ec',
       phone: '(05) 2638-111',
+      identification: '1234567890',
+      password: hashedPassword,
     },
   });
 
@@ -23,6 +28,8 @@ async function main() {
       name: 'Ana Rodríguez',
       email: 'ana.rodriguez@portoviejo.ec',
       phone: '(05) 2638-222',
+      identification: '0987654321',
+      password: hashedPassword,
     },
   });
 

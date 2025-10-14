@@ -125,6 +125,12 @@ DB_NAME=catastro_local
 - `GET /health/ready` - Readiness probe for Kubernetes/Docker
 - `GET /health/live` - Liveness probe for Kubernetes/Docker
 
+### Authentication
+
+- `POST /auth/login` - Login operator with email and password
+- `POST /auth/register` - Register new operator
+- `GET /auth/profile` - Get operator profile (requires authentication)
+
 ## Database Schema
 
 ### Restaurant Model
@@ -395,6 +401,82 @@ GET /health/live
   "alive": true,
   "timestamp": "2024-01-15T10:30:00.000Z",
   "uptime": 3600.123
+}
+```
+
+### Authentication Examples
+
+**Login Operator:**
+```
+POST /auth/login
+```
+
+**Request:**
+```json
+{
+  "email": "carlos.mendoza@portoviejo.ec",
+  "password": "password123"
+}
+```
+
+**Response:**
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "operator": {
+    "id": "operator-123",
+    "name": "Carlos Mendoza",
+    "email": "carlos.mendoza@portoviejo.ec",
+    "identification": "1234567890"
+  }
+}
+```
+
+**Register Operator:**
+```
+POST /auth/register
+```
+
+**Request:**
+```json
+{
+  "name": "Carlos Mendoza",
+  "email": "carlos.mendoza@portoviejo.ec",
+  "phone": "(05) 2638-111",
+  "identification": "1234567890",
+  "password": "securePassword123"
+}
+```
+
+**Response:**
+```json
+{
+  "id": "operator-123",
+  "name": "Carlos Mendoza",
+  "email": "carlos.mendoza@portoviejo.ec",
+  "identification": "1234567890",
+  "phone": "(05) 2638-111",
+  "createdAt": "2024-01-15T10:30:00.000Z",
+  "updatedAt": "2024-01-15T10:30:00.000Z"
+}
+```
+
+**Get Profile (Authenticated):**
+```
+GET /auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Response:**
+```json
+{
+  "id": "operator-123",
+  "name": "Carlos Mendoza",
+  "email": "carlos.mendoza@portoviejo.ec",
+  "identification": "1234567890",
+  "phone": "(05) 2638-111",
+  "createdAt": "2024-01-15T10:30:00.000Z",
+  "updatedAt": "2024-01-15T10:30:00.000Z"
 }
 ```
 

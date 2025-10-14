@@ -18,6 +18,18 @@ export class CreateOperatorDto {
     example: '(05) 2638-111',
   })
   phone?: string;
+
+  @ApiProperty({
+    description: 'Operator identification number',
+    example: '1234567890',
+  })
+  identification: string;
+
+  @ApiProperty({
+    description: 'Operator password',
+    example: 'securePassword123',
+  })
+  password: string;
 }
 
 export class UpdateOperatorDto {
@@ -38,4 +50,16 @@ export class UpdateOperatorDto {
     example: '(05) 2638-111',
   })
   phone?: string;
+
+  @ApiPropertyOptional({
+    description: 'Operator identification number',
+    example: '1234567890',
+  })
+  identification?: string;
+
+  @ApiPropertyOptional({
+    description: 'Operator password',
+    example: 'newSecurePassword123',
+  })
+  password?: string;
 }

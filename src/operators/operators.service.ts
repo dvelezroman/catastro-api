@@ -22,7 +22,10 @@ export class OperatorsService {
     });
   }
 
-  async update(id: string, data: Prisma.OperatorUpdateInput): Promise<Operator> {
+  async update(
+    id: string,
+    data: Prisma.OperatorUpdateInput,
+  ): Promise<Operator> {
     return this.prisma.operator.update({
       where: { id },
       data,

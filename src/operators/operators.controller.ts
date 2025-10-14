@@ -1,6 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { OperatorsService } from './operators.service';
-import { Operator, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 @Controller('operators')
 export class OperatorsController {
@@ -22,7 +30,10 @@ export class OperatorsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOperatorDto: Prisma.OperatorUpdateInput) {
+  update(
+    @Param('id') id: string,
+    @Body() updateOperatorDto: Prisma.OperatorUpdateInput,
+  ) {
     return this.operatorsService.update(id, updateOperatorDto);
   }
 

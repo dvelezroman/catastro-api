@@ -9,6 +9,8 @@ A NestJS API server for the Catastro Local application, providing REST endpoints
 - **Docker Compose**: Easy database setup with PostgreSQL container
 - **Environment Configuration**: Configurable via .env file
 - **RESTful API**: Full CRUD operations for restaurants and operators
+- **Swagger Documentation**: Interactive API documentation with DTOs
+- **Health Monitoring**: Comprehensive health check endpoints
 
 ## Prerequisites
 
@@ -49,6 +51,10 @@ npm run start:dev
 ```
 
 The API will be available at `http://localhost:3300`
+
+### 6. Access API Documentation
+
+Visit `http://localhost:3300/api/docs` to access the interactive Swagger documentation.
 
 ## Environment Variables
 
@@ -111,6 +117,13 @@ DB_NAME=catastro_local
 - `POST /operators` - Create new operator
 - `PATCH /operators/:id` - Update operator
 - `DELETE /operators/:id` - Delete operator
+
+### Health Check
+
+- `GET /health` - Basic health status with database connection
+- `GET /health/detailed` - Detailed health status with database stats
+- `GET /health/ready` - Readiness probe for Kubernetes/Docker
+- `GET /health/live` - Liveness probe for Kubernetes/Docker
 
 ## Database Schema
 
@@ -290,6 +303,99 @@ POST /restaurants/{restaurantId}/recipes/{recipeId}
 **Get Recipes by Restaurant:**
 ```
 GET /recipes/restaurant/{restaurantId}
+```
+
+### Health Check Examples
+
+**Basic Health Check:**
+```
+GET /health
+```
+
+**Response:**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2024-01-15T10:30:00.000Z",
+  "uptime": 3600.123,
+  "database": {
+    "status": "connected",
+    "responseTime": "15ms"
+  },
+  "memory": {
+    "used": 45,
+    "total": 128,
+    "unit": "MB"
+  },
+  "environment": "development",
+  "version": "1.0.0"
+}
+```
+
+**Detailed Health Check:**
+```
+GET /health/detailed
+```
+
+**Response:**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2024-01-15T10:30:00.000Z",
+  "uptime": 3600.123,
+  "database": {
+    "status": "connected",
+    "responseTime": "15ms",
+    "stats": {
+      "restaurants": 25,
+      "owners": 12,
+      "recipes": 150,
+      "operators": 5
+    }
+  },
+  "memory": {
+    "used": 45,
+    "total": 128,
+    "external": 8,
+    "rss": 65,
+    "unit": "MB"
+  },
+  "system": {
+    "platform": "darwin",
+    "arch": "x64",
+    "nodeVersion": "v18.17.0",
+    "pid": 12345
+  },
+  "environment": "development",
+  "version": "1.0.0"
+}
+```
+
+**Readiness Probe:**
+```
+GET /health/ready
+```
+
+**Response:**
+```json
+{
+  "ready": true,
+  "timestamp": "2024-01-15T10:30:00.000Z"
+}
+```
+
+**Liveness Probe:**
+```
+GET /health/live
+```
+
+**Response:**
+```json
+{
+  "alive": true,
+  "timestamp": "2024-01-15T10:30:00.000Z",
+  "uptime": 3600.123
+}
 ```
 
 ## Development

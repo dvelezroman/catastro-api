@@ -1,6 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { RecipesService } from './recipes.service';
-import { Recipe, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 @Controller('recipes')
 export class RecipesController {
@@ -39,11 +47,17 @@ export class RecipesController {
     @Param('recipeId') recipeId: string,
     @Param('restaurantId') restaurantId: string,
   ) {
-    return this.recipesService.removeRecipeFromRestaurant(restaurantId, recipeId);
+    return this.recipesService.removeRecipeFromRestaurant(
+      restaurantId,
+      recipeId,
+    );
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRecipeDto: Prisma.RecipeUpdateInput) {
+  update(
+    @Param('id') id: string,
+    @Body() updateRecipeDto: Prisma.RecipeUpdateInput,
+  ) {
     return this.recipesService.update(id, updateRecipeDto);
   }
 

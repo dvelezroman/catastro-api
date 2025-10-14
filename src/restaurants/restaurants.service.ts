@@ -47,7 +47,10 @@ export class RestaurantsService {
     });
   }
 
-  async update(id: string, data: Prisma.RestaurantUpdateInput): Promise<Restaurant> {
+  async update(
+    id: string,
+    data: Prisma.RestaurantUpdateInput,
+  ): Promise<Restaurant> {
     return this.prisma.restaurant.update({
       where: { id },
       data,
@@ -68,7 +71,10 @@ export class RestaurantsService {
     });
   }
 
-  async createWithOwner(restaurantData: Prisma.RestaurantCreateInput, ownerData: Prisma.OwnerCreateInput) {
+  async createWithOwner(
+    restaurantData: Prisma.RestaurantCreateInput,
+    ownerData: Prisma.OwnerCreateInput,
+  ) {
     return this.prisma.$transaction(async (tx) => {
       // Create owner first
       const owner = await tx.owner.create({
@@ -121,7 +127,7 @@ export class RestaurantsService {
       // Create restaurant-recipe relationships
       if (data.recipeIds.length > 0) {
         await tx.restaurantRecipe.createMany({
-          data: data.recipeIds.map(recipeId => ({
+          data: data.recipeIds.map((recipeId) => ({
             restaurantId: restaurant.id,
             recipeId: recipeId,
           })),

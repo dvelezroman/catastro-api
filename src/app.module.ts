@@ -7,6 +7,7 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
 import { OperatorsModule } from './operators/operators.module';
 import { OwnersModule } from './owners/owners.module';
 import { RecipesModule } from './recipes/recipes.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { RecipesModule } from './recipes/recipes.module';
     OperatorsModule,
     OwnersModule,
     RecipesModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

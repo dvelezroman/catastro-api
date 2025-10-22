@@ -6,8 +6,6 @@ import * as bcrypt from 'bcryptjs';
 
 describe('AuthService', () => {
   let service: AuthService;
-  let prismaService: PrismaService;
-  let jwtService: JwtService;
 
   const mockPrismaService = {
     operator: {
@@ -37,8 +35,6 @@ describe('AuthService', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
-    prismaService = module.get<PrismaService>(PrismaService);
-    jwtService = module.get<JwtService>(JwtService);
   });
 
   afterEach(() => {
@@ -54,7 +50,7 @@ describe('AuthService', () => {
       const email = 'test@example.com';
       const password = 'password123';
       const hashedPassword = await bcrypt.hash(password, 10);
-      
+
       const operator = {
         id: '1',
         name: 'Test Operator',

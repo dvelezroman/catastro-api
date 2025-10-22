@@ -10,7 +10,9 @@ type OperatorWithoutPassword = Omit<Operator, 'password'>;
 export class OperatorsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: Prisma.OperatorCreateInput): Promise<OperatorWithoutPassword> {
+  async create(
+    data: Prisma.OperatorCreateInput,
+  ): Promise<OperatorWithoutPassword> {
     // Hash password if provided
     if (data.password && typeof data.password === 'string') {
       data.password = await bcrypt.hash(data.password, 10);

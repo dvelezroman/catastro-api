@@ -9,10 +9,10 @@ export class UploadService {
   private readonly bucketName: string;
 
   constructor(private readonly configService: ConfigService) {
-    this.bucketName = this.configService.get<string>('S3_FOLDER');
+    this.bucketName = this.configService.get<string>('S3_BUCKET_NAME');
 
     if (!this.bucketName) {
-      throw new Error('S3_FOLDER environment variable is required');
+      throw new Error('S3_BUCKET_NAME environment variable is required');
     }
 
     this.s3Client = new S3Client({
@@ -56,11 +56,12 @@ export class UploadService {
       // Generate unique filename
       const fileExtension = file.originalname.split('.').pop();
       const fileName = `${uuidv4()}.${fileExtension}`;
+      const s3Key = `catastro/${fileName}`;
 
       // Upload to S3
       const command = new PutObjectCommand({
         Bucket: this.bucketName,
-        Key: fileName,
+        Key: s3Key,
         Body: file.buffer,
         ContentType: file.mimetype,
         ACL: 'public-read', // Make the file publicly accessible
@@ -70,7 +71,7 @@ export class UploadService {
 
       // Return the public URL
       const region = this.configService.get<string>('AWS_REGION', 'us-east-1');
-      return `https://${this.bucketName}.s3.${region}.amazonaws.com/${fileName}`;
+      return `https://${this.bucketName}.s3.${region}.amazonaws.com/${s3Key}`;
     } catch (error) {
       throw new BadRequestException(`Failed to upload image: ${error.message}`);
     }

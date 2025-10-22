@@ -4,6 +4,7 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
+  Body,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -14,8 +15,18 @@ import {
   ApiBody,
   ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
+  ApiProperty,
 } from '@nestjs/swagger';
 import { UploadService } from './upload.service';
+
+class UploadImageDto {
+  @ApiProperty({
+    description: 'Subfolder name within catastro directory (optional)',
+    example: 'restaurants',
+    required: false,
+  })
+  subfolder?: string;
+}
 
 @ApiTags('upload')
 @Controller('upload')
@@ -31,7 +42,7 @@ export class UploadController {
   })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Image file to upload',
+    description: 'Image file to upload with optional subfolder',
     type: 'multipart/form-data',
     schema: {
       type: 'object',
@@ -40,6 +51,11 @@ export class UploadController {
           type: 'string',
           format: 'binary',
           description: 'Image file (JPEG, PNG, GIF, WebP) - Max size: 5MB',
+        },
+        subfolder: {
+          type: 'string',
+          description: 'Subfolder name within catastro directory (optional)',
+          example: 'restaurants',
         },
       },
       required: ['file'],
@@ -120,12 +136,15 @@ export class UploadController {
       },
     },
   })
-  async uploadImage(@UploadedFile() file: Express.Multer.File) {
+  async uploadImage(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() uploadDto: UploadImageDto,
+  ) {
     if (!file) {
       throw new BadRequestException('No file provided');
     }
 
-    const url = await this.uploadService.uploadImage(file);
+    const url = await this.uploadService.uploadImage(file, uploadDto.subfolder);
 
     return {
       url,

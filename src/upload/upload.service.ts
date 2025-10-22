@@ -26,7 +26,10 @@ export class UploadService {
     });
   }
 
-  async uploadImage(file: Express.Multer.File): Promise<string> {
+  async uploadImage(
+    file: Express.Multer.File,
+    subfolder?: string,
+  ): Promise<string> {
     if (!file) {
       throw new BadRequestException('No file provided');
     }
@@ -56,7 +59,11 @@ export class UploadService {
       // Generate unique filename
       const fileExtension = file.originalname.split('.').pop();
       const fileName = `${uuidv4()}.${fileExtension}`;
-      const s3Key = `catastro/${fileName}`;
+
+      // Build S3 key with optional subfolder
+      const s3Key = subfolder
+        ? `catastro/${subfolder}/${fileName}`
+        : `catastro/${fileName}`;
 
       // Upload to S3
       const command = new PutObjectCommand({

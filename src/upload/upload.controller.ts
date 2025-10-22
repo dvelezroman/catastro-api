@@ -4,7 +4,7 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
-  Body,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -15,18 +15,9 @@ import {
   ApiBody,
   ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
-  ApiProperty,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { UploadService } from './upload.service';
-
-class UploadImageDto {
-  @ApiProperty({
-    description: 'Folder name within the S3 bucket (optional)',
-    example: 'catastro/restaurants',
-    required: false,
-  })
-  subfolder?: string;
-}
 
 @ApiTags('upload')
 @Controller('upload')
@@ -41,8 +32,14 @@ export class UploadController {
       'Uploads an image file to AWS S3 bucket and returns the public URL. Supports JPEG, PNG, GIF, and WebP formats with a maximum file size of 5MB.',
   })
   @ApiConsumes('multipart/form-data')
+  @ApiQuery({
+    name: 'subfolder',
+    description: 'Folder name within the S3 bucket (optional)',
+    required: false,
+    example: 'catastro/restaurants',
+  })
   @ApiBody({
-    description: 'Image file to upload with optional subfolder',
+    description: 'Image file to upload',
     type: 'multipart/form-data',
     schema: {
       type: 'object',
@@ -51,11 +48,6 @@ export class UploadController {
           type: 'string',
           format: 'binary',
           description: 'Image file (JPEG, PNG, GIF, WebP) - Max size: 5MB',
-        },
-        subfolder: {
-          type: 'string',
-          description: 'Folder name within the S3 bucket (optional)',
-          example: 'catastro/restaurants',
         },
       },
       required: ['file'],
@@ -138,13 +130,13 @@ export class UploadController {
   })
   async uploadImage(
     @UploadedFile() file: Express.Multer.File,
-    @Body() uploadDto: UploadImageDto,
+    @Query('subfolder') subfolder?: string,
   ) {
     if (!file) {
       throw new BadRequestException('No file provided');
     }
 
-    const url = await this.uploadService.uploadImage(file, uploadDto.subfolder);
+    const url = await this.uploadService.uploadImage(file, subfolder);
 
     return {
       url,

@@ -8,6 +8,7 @@ import { OwnersModule } from './owners/owners.module';
 import { RecipesModule } from './recipes/recipes.module';
 import { HealthModule } from './health/health.module';
 import { AuthModule } from './auth/auth.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AuthModule } from './auth/auth.module';
     RecipesModule,
     HealthModule,
     AuthModule,
+    UploadModule,
   ],
   controllers: [],
   providers: [AppService, PrismaService],

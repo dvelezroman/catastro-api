@@ -31,6 +31,7 @@ export class AuthService {
     }
 
     // Remove password from response
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...result } = operator;
     return result;
   }

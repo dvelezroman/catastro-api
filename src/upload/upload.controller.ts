@@ -21,8 +21,8 @@ import { UploadService } from './upload.service';
 
 class UploadImageDto {
   @ApiProperty({
-    description: 'Subfolder name within catastro directory (optional)',
-    example: 'restaurants',
+    description: 'Folder name within the S3 bucket (optional)',
+    example: 'catastro/restaurants',
     required: false,
   })
   subfolder?: string;
@@ -54,8 +54,8 @@ export class UploadController {
         },
         subfolder: {
           type: 'string',
-          description: 'Subfolder name within catastro directory (optional)',
-          example: 'restaurants',
+          description: 'Folder name within the S3 bucket (optional)',
+          example: 'catastro/restaurants',
         },
       },
       required: ['file'],
@@ -72,7 +72,7 @@ export class UploadController {
           format: 'uri',
           description: 'The public URL of the uploaded image',
           example:
-            'https://recipes-manabi-images.s3.us-east-1.amazonaws.com/catastro/uuid-filename.jpg',
+            'https://recipes-manabi-images.s3.us-east-1.amazonaws.com/catastro/restaurants/uuid-filename.jpg',
         },
       },
     },

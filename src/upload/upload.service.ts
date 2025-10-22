@@ -60,10 +60,12 @@ export class UploadService {
       const fileExtension = file.originalname.split('.').pop();
       const fileName = `${uuidv4()}.${fileExtension}`;
 
-      // Build S3 key with optional subfolder
-      const s3Key = subfolder
-        ? `catastro/${subfolder}/${fileName}`
-        : `catastro/${fileName}`;
+      // Build S3 key with optional base folder and subfolder
+      let s3Key = fileName; // Default to root of bucket
+
+      if (subfolder) {
+        s3Key = `${subfolder}/${fileName}`;
+      }
 
       // Upload to S3
       const command = new PutObjectCommand({

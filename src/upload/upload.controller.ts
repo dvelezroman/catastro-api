@@ -36,7 +36,7 @@ export class UploadController {
     name: 'subfolder',
     description: 'Folder name within the S3 bucket (optional)',
     required: false,
-    example: 'catastro/restaurants',
+    example: 'catastro',
   })
   @ApiBody({
     description: 'Image file to upload',

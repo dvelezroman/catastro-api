@@ -9,7 +9,7 @@ export class UploadService {
   private readonly bucketName: string;
 
   constructor(private readonly configService: ConfigService) {
-    this.bucketName = this.configService.get<string>('S3_BUCKET_NAME');
+    this.bucketName = this.configService.get<string>('AWS_S3_BUCKET_NAME');
 
     if (!this.bucketName) {
       throw new Error('S3_BUCKET_NAME environment variable is required');

@@ -6,9 +6,14 @@ import { ValidationPipe } from '@nestjs/common';
 import { NextFunction } from 'express';
 
 async function bootstrap() {
+  const isDevelopment = process.env.NODE_ENV !== 'production';
+
   const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'error', 'warn'],
+    logger: isDevelopment
+      ? ['log', 'error', 'warn', 'debug', 'verbose']
+      : ['error', 'warn'],
   });
+
   const configService = app.get(ConfigService);
   const port = configService.get('PORT') || 3300;
 
@@ -46,9 +51,12 @@ async function bootstrap() {
   });
 
   await app.listen(port);
-  console.log(`🚀 Application is running on: http://localhost:${port}`);
-  console.log(
-    `📚 API Documentation available at: http://localhost:${port}/api/docs`,
-  );
+
+  if (isDevelopment) {
+    console.log(`🚀 Application is running on: http://localhost:${port}`);
+    console.log(
+      `📚 API Documentation available at: http://localhost:${port}/api/docs`,
+    );
+  }
 }
 bootstrap();

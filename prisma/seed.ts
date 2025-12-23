@@ -8,7 +8,7 @@ async function main() {
 
   // Create sample operators
   const hashedPassword = await bcrypt.hash('password123', 10);
-  
+
   const operator1 = await prisma.operator.upsert({
     where: { email: 'carlos.mendoza@portoviejo.ec' },
     update: {},
@@ -33,7 +33,10 @@ async function main() {
     },
   });
 
-  console.log('✅ Operators created:', { operator1: operator1.name, operator2: operator2.name });
+  console.log('✅ Operators created:', {
+    operator1: operator1.name,
+    operator2: operator2.name,
+  });
 
   // Create sample owners
   const owner1 = await prisma.owner.upsert({
@@ -58,7 +61,10 @@ async function main() {
     },
   });
 
-  console.log('✅ Owners created:', { owner1: owner1.name, owner2: owner2.name });
+  console.log('✅ Owners created:', {
+    owner1: owner1.name,
+    owner2: owner2.name,
+  });
 
   // Create sample recipes
   const recipe1 = await prisma.recipe.upsert({
@@ -67,7 +73,8 @@ async function main() {
     create: {
       id: 'recipe-ceviche-camaron',
       name: 'Ceviche de Camarón',
-      description: 'Ceviche fresco con camarones del día, cebolla, tomate y cilantro',
+      description:
+        'Ceviche fresco con camarones del día, cebolla, tomate y cilantro',
     },
   });
 
@@ -127,7 +134,8 @@ async function main() {
       id: 'restaurant-el-buen-sabor',
       name: 'El Buen Sabor',
       description: 'Restaurante familiar con comida tradicional',
-      history: 'Fundado en 1985 por la familia González, El Buen Sabor ha sido un referente en la cocina tradicional de Portoviejo. Durante más de 35 años, hemos servido los sabores auténticos de la región, manteniendo las recetas familiares que han pasado de generación en generación.',
+      history:
+        'Fundado en 1985 por la familia González, El Buen Sabor ha sido un referente en la cocina tradicional de Portoviejo. Durante más de 35 años, hemos servido los sabores auténticos de la región, manteniendo las recetas familiares que han pasado de generación en generación.',
       address: 'Av. Principal 123, Portoviejo',
       latitude: -1.0547,
       longitude: -80.4545,
@@ -152,10 +160,11 @@ async function main() {
       id: 'restaurant-sabores-del-mar',
       name: 'Sabores del Mar',
       description: 'Especialistas en mariscos frescos',
-      history: 'Desde 1992, Sabores del Mar se ha especializado en ofrecer los mejores mariscos de la costa ecuatoriana. Nuestro compromiso es servir productos frescos del día, preparados con técnicas tradicionales y un toque moderno.',
+      history:
+        'Desde 1992, Sabores del Mar se ha especializado en ofrecer los mejores mariscos de la costa ecuatoriana. Nuestro compromiso es servir productos frescos del día, preparados con técnicas tradicionales y un toque moderno.',
       address: 'Malecón 456, Portoviejo',
-      latitude: -1.0520,
-      longitude: -80.4520,
+      latitude: -1.052,
+      longitude: -80.452,
       phone: '(05) 2638-5555',
       email: 'info@saboresdelmar.ec',
       website: 'https://saboresdelmar.ec',

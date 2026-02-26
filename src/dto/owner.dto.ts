@@ -10,6 +10,7 @@ export class CreateOwnerDto {
   @ApiProperty({
     description: 'Owner email address',
     example: 'maria.gonzalez@email.com',
+    format: 'email',
   })
   email: string;
 
@@ -36,6 +37,7 @@ export class UpdateOwnerDto {
   @ApiPropertyOptional({
     description: 'Owner email address',
     example: 'maria.gonzalez@email.com',
+    format: 'email',
   })
   email?: string;
 

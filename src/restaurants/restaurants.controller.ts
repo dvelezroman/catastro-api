@@ -14,6 +14,7 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { RestaurantsService } from './restaurants.service';
 import { Prisma } from '@prisma/client';
@@ -31,16 +32,19 @@ export class RestaurantsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new restaurant' })
   @ApiBody({ type: CreateRestaurantDto })
   @ApiResponse({ status: 201, description: 'Restaurant created successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   create(@Body() createRestaurantDto: Prisma.RestaurantCreateInput) {
     return this.restaurantsService.create(createRestaurantDto);
   }
 
   @Post('with-owner')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create restaurant with owner' })
   @ApiBody({
     schema: {
@@ -56,6 +60,7 @@ export class RestaurantsController {
     description: 'Restaurant and owner created successfully',
   })
   @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   createWithOwner(
     @Body()
     body: {
@@ -68,6 +73,7 @@ export class RestaurantsController {
 
   @Post('complete')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create restaurant with owner and recipes' })
   @ApiBody({ type: CreateRestaurantWithOwnerDto })
   @ApiResponse({
@@ -75,6 +81,7 @@ export class RestaurantsController {
     description: 'Restaurant, owner and recipes created successfully',
   })
   @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   createRestaurantWithOwnerAndRecipes(
     @Body()
     body: {
@@ -107,6 +114,7 @@ export class RestaurantsController {
 
   @Post(':id/recipes/:recipeId')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Add recipe to restaurant' })
   @ApiParam({ name: 'id', description: 'Restaurant ID' })
   @ApiParam({ name: 'recipeId', description: 'Recipe ID' })
@@ -114,6 +122,7 @@ export class RestaurantsController {
     status: 201,
     description: 'Recipe added to restaurant successfully',
   })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Restaurant or recipe not found' })
   addRecipeToRestaurant(
     @Param('id') id: string,
@@ -124,6 +133,7 @@ export class RestaurantsController {
 
   @Delete(':id/recipes/:recipeId')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Remove recipe from restaurant' })
   @ApiParam({ name: 'id', description: 'Restaurant ID' })
   @ApiParam({ name: 'recipeId', description: 'Recipe ID' })
@@ -131,6 +141,7 @@ export class RestaurantsController {
     status: 200,
     description: 'Recipe removed from restaurant successfully',
   })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Restaurant or recipe not found' })
   removeRecipeFromRestaurant(
     @Param('id') id: string,
@@ -141,10 +152,12 @@ export class RestaurantsController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update restaurant' })
   @ApiParam({ name: 'id', description: 'Restaurant ID' })
   @ApiBody({ type: UpdateRestaurantDto })
   @ApiResponse({ status: 200, description: 'Restaurant updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Restaurant not found' })
   update(
     @Param('id') id: string,
@@ -155,9 +168,11 @@ export class RestaurantsController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete restaurant' })
   @ApiParam({ name: 'id', description: 'Restaurant ID' })
   @ApiResponse({ status: 200, description: 'Restaurant deleted successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Restaurant not found' })
   remove(@Param('id') id: string) {
     return this.restaurantsService.remove(id);

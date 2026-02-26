@@ -11,6 +11,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
+  ApiBody,
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto, LoginResponseDto } from './dto/login.dto';
@@ -24,6 +25,7 @@ export class AuthController {
 
   @Post('login')
   @ApiOperation({ summary: 'Login operator' })
+  @ApiBody({ type: LoginDto })
   @ApiResponse({
     status: 200,
     description: 'Login successful',
@@ -36,6 +38,7 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: 'Register new operator' })
+  @ApiBody({ type: RegisterDto })
   @ApiResponse({ status: 201, description: 'Operator registered successfully' })
   @ApiResponse({ status: 409, description: 'Operator already exists' })
   async register(@Body() registerDto: RegisterDto) {

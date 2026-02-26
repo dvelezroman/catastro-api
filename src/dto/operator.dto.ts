@@ -10,6 +10,7 @@ export class CreateOperatorDto {
   @ApiProperty({
     description: 'Operator email address',
     example: 'carlos.mendoza@portoviejo.ec',
+    format: 'email',
   })
   email: string;
 
@@ -28,6 +29,8 @@ export class CreateOperatorDto {
   @ApiProperty({
     description: 'Operator password',
     example: 'securePassword123',
+    format: 'password',
+    minLength: 8,
   })
   password: string;
 }
@@ -42,6 +45,7 @@ export class UpdateOperatorDto {
   @ApiPropertyOptional({
     description: 'Operator email address',
     example: 'carlos.mendoza@portoviejo.ec',
+    format: 'email',
   })
   email?: string;
 
@@ -60,6 +64,8 @@ export class UpdateOperatorDto {
   @ApiPropertyOptional({
     description: 'Operator password',
     example: 'newSecurePassword123',
+    format: 'password',
+    minLength: 8,
   })
   password?: string;
 }

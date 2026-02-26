@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { CreateOwnerDto } from './owner.dto';
 
 export class CreateRestaurantDto {
   @ApiProperty({
@@ -28,12 +29,16 @@ export class CreateRestaurantDto {
   @ApiProperty({
     description: 'Latitude coordinate',
     example: -1.0547,
+    minimum: -90,
+    maximum: 90,
   })
   latitude: number;
 
   @ApiProperty({
     description: 'Longitude coordinate',
     example: -80.4545,
+    minimum: -180,
+    maximum: 180,
   })
   longitude: number;
 
@@ -46,18 +51,21 @@ export class CreateRestaurantDto {
   @ApiPropertyOptional({
     description: 'Restaurant email',
     example: 'contacto@elbuensabor.ec',
+    format: 'email',
   })
   email?: string;
 
   @ApiPropertyOptional({
     description: 'Restaurant website URL',
     example: 'https://elbuensabor.ec',
+    format: 'uri',
   })
   website?: string;
 
   @ApiPropertyOptional({
     description: 'Main restaurant image URL',
     example: 'https://example.com/restaurant-main.jpg',
+    format: 'uri',
   })
   principalImage?: string;
 
@@ -68,6 +76,7 @@ export class CreateRestaurantDto {
       'https://example.com/restaurant-2.jpg',
     ],
     type: [String],
+    items: { type: 'string', format: 'uri' },
   })
   images?: string[];
 
@@ -112,12 +121,16 @@ export class UpdateRestaurantDto {
   @ApiPropertyOptional({
     description: 'Latitude coordinate',
     example: -1.0547,
+    minimum: -90,
+    maximum: 90,
   })
   latitude?: number;
 
   @ApiPropertyOptional({
     description: 'Longitude coordinate',
     example: -80.4545,
+    minimum: -180,
+    maximum: 180,
   })
   longitude?: number;
 
@@ -130,18 +143,21 @@ export class UpdateRestaurantDto {
   @ApiPropertyOptional({
     description: 'Restaurant email',
     example: 'contacto@elbuensabor.ec',
+    format: 'email',
   })
   email?: string;
 
   @ApiPropertyOptional({
     description: 'Restaurant website URL',
     example: 'https://elbuensabor.ec',
+    format: 'uri',
   })
   website?: string;
 
   @ApiPropertyOptional({
     description: 'Main restaurant image URL',
     example: 'https://example.com/restaurant-main.jpg',
+    format: 'uri',
   })
   principalImage?: string;
 
@@ -152,6 +168,7 @@ export class UpdateRestaurantDto {
       'https://example.com/restaurant-2.jpg',
     ],
     type: [String],
+    items: { type: 'string', format: 'uri' },
   })
   images?: string[];
 
@@ -177,20 +194,9 @@ export class CreateRestaurantWithOwnerDto {
 
   @ApiProperty({
     description: 'Owner data',
-    type: 'object',
-    properties: {
-      name: { type: 'string', example: 'María González' },
-      email: { type: 'string', example: 'maria.gonzalez@email.com' },
-      phone: { type: 'string', example: '(05) 2638-5678' },
-      address: { type: 'string', example: 'Calle Secundaria 456, Portoviejo' },
-    },
+    type: CreateOwnerDto,
   })
-  owner: {
-    name: string;
-    email: string;
-    phone?: string;
-    address?: string;
-  };
+  owner: CreateOwnerDto;
 
   @ApiProperty({
     description: 'Array of recipe IDs to associate with the restaurant',

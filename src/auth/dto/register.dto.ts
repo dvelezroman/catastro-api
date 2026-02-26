@@ -10,6 +10,7 @@ export class RegisterDto {
   @ApiProperty({
     description: 'Operator email address',
     example: 'carlos.mendoza@portoviejo.ec',
+    format: 'email',
   })
   email: string;
 
@@ -28,6 +29,8 @@ export class RegisterDto {
   @ApiProperty({
     description: 'Operator password',
     example: 'securePassword123',
+    format: 'password',
+    minLength: 8,
   })
   password: string;
 }

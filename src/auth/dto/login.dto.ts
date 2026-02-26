@@ -4,6 +4,7 @@ export class LoginDto {
   @ApiProperty({
     description: 'Operator email address',
     example: 'carlos.mendoza@portoviejo.ec',
+    format: 'email',
   })
   email: string;
 

@@ -17,6 +17,7 @@ import {
   ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
   ApiQuery,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UploadService } from './upload.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -28,6 +29,7 @@ export class UploadController {
 
   @Post('image')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({
     summary: 'Upload an image to S3',
@@ -72,6 +74,7 @@ export class UploadController {
       },
     },
   })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiBadRequestResponse({
     description: 'Bad request - invalid file or validation failed',
     schema: {

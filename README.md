@@ -58,7 +58,7 @@ Visit `http://localhost:3300/api/docs` to access the interactive Swagger documen
 
 ## Environment Variables
 
-Create a `.env` file in the root directory with the following variables:
+Copy `.env.example` to `.env` and adjust values. Required variables:
 
 ```env
 # Server Configuration
@@ -67,14 +67,35 @@ NODE_ENV=development
 
 # Database Configuration
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/catastro_local?schema=public"
-
-# Database Connection Details
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
 DB_NAME=catastro_local
+
+# JWT (required for authentication)
+JWT_SECRET=your-secret-key-change-in-production
+JWT_EXPIRES_IN=86400
+
+# AWS S3 (required for image upload)
+AWS_ACCESS_KEY_ID=your-aws-access-key
+AWS_SECRET_ACCESS_KEY=your-aws-secret-key
+AWS_REGION=us-east-1
+AWS_S3_BUCKET_NAME=your-bucket-name
 ```
+
+## Authentication and protected endpoints
+
+- **Public endpoints** (no token): `GET /restaurants`, `GET /restaurants/:id`, `GET /recipes`, `GET /recipes/:id`, `GET /recipes/restaurant/:restaurantId`, `GET /owners`, `GET /owners/:id`, `GET /owners/:id/restaurants`, `POST /auth/login`, `POST /auth/register`, health endpoints.
+- **Protected endpoints** (require JWT): All other write operations (POST, PATCH, DELETE) on restaurants, recipes, owners, operators, and `POST /upload/image`. All operators CRUD is protected.
+
+To call protected endpoints, send the JWT in the header:
+
+```http
+Authorization: Bearer <access_token>
+```
+
+Obtain the token via `POST /auth/login` (response includes `access_token`). The frontend stores it in an HTTP-only cookie and forwards it through the Next.js proxy.
 
 ## API Endpoints
 

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -21,6 +22,7 @@ import {
   UpdateRestaurantDto,
   CreateRestaurantWithOwnerDto,
 } from '../dto/restaurant.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Restaurants')
 @Controller('restaurants')
@@ -28,6 +30,7 @@ export class RestaurantsController {
   constructor(private readonly restaurantsService: RestaurantsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create a new restaurant' })
   @ApiBody({ type: CreateRestaurantDto })
   @ApiResponse({ status: 201, description: 'Restaurant created successfully' })
@@ -37,6 +40,7 @@ export class RestaurantsController {
   }
 
   @Post('with-owner')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create restaurant with owner' })
   @ApiBody({
     schema: {
@@ -63,6 +67,7 @@ export class RestaurantsController {
   }
 
   @Post('complete')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create restaurant with owner and recipes' })
   @ApiBody({ type: CreateRestaurantWithOwnerDto })
   @ApiResponse({
@@ -101,6 +106,7 @@ export class RestaurantsController {
   }
 
   @Post(':id/recipes/:recipeId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Add recipe to restaurant' })
   @ApiParam({ name: 'id', description: 'Restaurant ID' })
   @ApiParam({ name: 'recipeId', description: 'Recipe ID' })
@@ -117,6 +123,7 @@ export class RestaurantsController {
   }
 
   @Delete(':id/recipes/:recipeId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Remove recipe from restaurant' })
   @ApiParam({ name: 'id', description: 'Restaurant ID' })
   @ApiParam({ name: 'recipeId', description: 'Recipe ID' })
@@ -133,6 +140,7 @@ export class RestaurantsController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update restaurant' })
   @ApiParam({ name: 'id', description: 'Restaurant ID' })
   @ApiBody({ type: UpdateRestaurantDto })
@@ -146,6 +154,7 @@ export class RestaurantsController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete restaurant' })
   @ApiParam({ name: 'id', description: 'Restaurant ID' })
   @ApiResponse({ status: 200, description: 'Restaurant deleted successfully' })

@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   UseInterceptors,
+  UseGuards,
   UploadedFile,
   BadRequestException,
   Query,
@@ -18,6 +19,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { UploadService } from './upload.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('upload')
 @Controller('upload')
@@ -25,6 +27,7 @@ export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
   @Post('image')
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({
     summary: 'Upload an image to S3',

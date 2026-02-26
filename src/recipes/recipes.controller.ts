@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { RecipesService } from './recipes.service';
 import { Prisma } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Recipes')
 @Controller('recipes')
@@ -17,6 +19,7 @@ export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   create(@Body() createRecipeDto: Prisma.RecipeCreateInput) {
     return this.recipesService.create(createRecipeDto);
   }
@@ -37,6 +40,7 @@ export class RecipesController {
   }
 
   @Post(':recipeId/restaurant/:restaurantId')
+  @UseGuards(JwtAuthGuard)
   addRecipeToRestaurant(
     @Param('recipeId') recipeId: string,
     @Param('restaurantId') restaurantId: string,
@@ -45,6 +49,7 @@ export class RecipesController {
   }
 
   @Delete(':recipeId/restaurant/:restaurantId')
+  @UseGuards(JwtAuthGuard)
   removeRecipeFromRestaurant(
     @Param('recipeId') recipeId: string,
     @Param('restaurantId') restaurantId: string,
@@ -56,6 +61,7 @@ export class RecipesController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   update(
     @Param('id') id: string,
     @Body() updateRecipeDto: Prisma.RecipeUpdateInput,
@@ -64,6 +70,7 @@ export class RecipesController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.recipesService.remove(id);
   }
